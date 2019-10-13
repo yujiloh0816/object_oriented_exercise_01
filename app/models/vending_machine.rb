@@ -1,34 +1,34 @@
 class VendingMachine < ApplicationRecord
 
-  def buy(i, kind_of_type)
+  def buy(payment, kind_of_type)
     # 100円と500円だけ受け付ける
-    if i != 100 && i != 500
-      self.charge += i
+    if payment != 100 && payment != 500
+      self.charge += payment
       return nil
     end
 
     if kind_of_type == "coke" && self.quantity_of_coke == 0
-      self.charge += i
+      self.charge += payment
       return nil
     elsif kind_of_type == "diet_coke" && self.quantity_of_diet_coke == 0
-      self.charge += i
+      self.charge += payment
       return nil
     elsif kind_of_type == "tea" && self.quantity_of_tea == 0
-      self.charge += i
+      self.charge += payment
       return nil
     end
 
     # 釣り銭不足
-    if i == 500 && self.number_of_100_yen < 4
-      self.charge += i
+    if payment == 500 && self.number_of_100_yen < 4
+      self.charge += payment
       return nil
     end
 
-    if i == 100
+    if payment == 100
       self.number_of_100_yen += 1
-    elsif i == 500
-      self.charge += (i - 100)
-      self.number_of_100_yen -= (i - 100) / 100
+    elsif payment == 500
+      self.charge += (payment - 100)
+      self.number_of_100_yen -= (payment - 100) / 100
     end
 
     if kind_of_type == "coke"
