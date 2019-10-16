@@ -9,33 +9,33 @@ class VendingMachine < ApplicationRecord
 
     # 100円と500円だけ受け付ける
     unless coin.one_hundred? || coin.five_hundred?
-      coin.update(change_money_id: change_money.id)
+      change_money.add(coin)
       return nil
     end
 
-    if drink_type.coke? && stock_of_coke.quantity == 0
-      coin.update(change_money_id: change_money.id)
+    if drink_type.coke? && stock_of_coke.is_empty
+      change_money.add(coin)
       return nil
-    elsif drink_type.diet_coke? && stock_of_diet_coke.quantity == 0
-      coin.update(change_money_id: change_money.id)
+    elsif drink_type.diet_coke? && stock_of_diet_coke.is_empty
+      change_money.add(coin)
       return nil
-    elsif drink_type.tea? && stock_of_tea.quantity == 0
-      coin.update(change_money_id: change_money.id)
+    elsif drink_type.tea? && stock_of_tea.is_empty
+      change_money.add(coin)
       return nil
     end
 
     # 釣り銭不足
-    if coin.five_hundred? && one_hundred_yen_of_stock.coins.size < 4
-      coin.update(change_money_id: change_money.id)
+    if coin.five_hundred? && one_hundred_yen_of_stock.does_not_have_money_change
+      change_money.add(coin)
       return nil
     end
 
     if coin.one_hundred?
       # 100円玉を釣り銭に使える
-      coin.update(one_hundred_yen_of_stock_id: one_hundred_yen_of_stock.id)
+      one_hundred_yen_of_stock.add(coin)
     elsif coin.five_hundred?
       # 400円のお釣り
-      calculate_change
+      change_money.add(one_hundred_yen_of_stock.take_out_change_money);
     end
 
     if drink_type.diet_coke?
@@ -78,10 +78,6 @@ class VendingMachine < ApplicationRecord
       vending_machine_id: self.id,
       quantity: 5
     )
-  end
-
-  def calculate_change
-    one_hundred_yen_of_stock.coins.limit(4).each { |coin| coin.update(change_money_id: change_money.id) }
   end
 
 end

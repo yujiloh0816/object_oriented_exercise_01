@@ -6,4 +6,15 @@ class Coin < ApplicationRecord
 
   validates :kind, presence: true
 
+
+  def to_money
+    Money.new(amount: amount)
+  end
+
+# private
+
+  def amount
+    kind_before_type_cast
+  end
+
 end

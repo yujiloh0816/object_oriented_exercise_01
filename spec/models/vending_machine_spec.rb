@@ -15,7 +15,7 @@ describe VendingMachine do
     expect(coke).to be_present
 
     change = vm.refund
-    expect(change).to eq 400
+    expect(change).to eq "400"
   end
 
   it "100円でダイエットコーラを買う" do
@@ -29,7 +29,7 @@ describe VendingMachine do
     expect(coke).to be_present
 
     change = vm.refund
-    expect(change).to eq 0
+    expect(change).to eq "0"
   end
 
 end
