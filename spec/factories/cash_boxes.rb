@@ -1,5 +1,6 @@
 FactoryBot.define do
-  factory :change_money do
+  factory :cash_box do
     association :coin_mech
+
   end
 end

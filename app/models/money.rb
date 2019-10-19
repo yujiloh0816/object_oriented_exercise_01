@@ -1,4 +1,5 @@
 class Money < ApplicationRecord
+  belongs_to :coin
 
   def add(money)
     update(amount: self.amount + money.amount)

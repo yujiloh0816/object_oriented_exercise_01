@@ -1,7 +1,6 @@
 class VendingMachine < ApplicationRecord
-  has_many :stocks
-  has_one :one_hundred_yen_of_stock
-  has_one :change_money
+  has_one :coin_mech
+  has_one :drink_storage
 
   def buy(payment, kind_of_type)
     coin = Coin.create(kind: payment)
@@ -9,75 +8,37 @@ class VendingMachine < ApplicationRecord
 
     # 100円と500円だけ受け付ける
     unless coin.one_hundred? || coin.five_hundred?
-      change_money.add(coin)
+      coin_mech.add_change_money(coin)
       return nil
     end
 
-    if drink_type.coke? && stock_of_coke.is_empty
-      change_money.add(coin)
-      return nil
-    elsif drink_type.diet_coke? && stock_of_diet_coke.is_empty
-      change_money.add(coin)
-      return nil
-    elsif drink_type.tea? && stock_of_tea.is_empty
-      change_money.add(coin)
+    # 在庫があるか確認
+    if drink_storage.is_empty(drink_type)
+      coin_mech.add_change_money(coin)
       return nil
     end
 
-    # 釣り銭不足
-    if coin.five_hundred? && one_hundred_yen_of_stock.does_not_have_money_change
-      change_money.add(coin)
+    # 500円の場合おつりがあるか確認
+    if coin.five_hundred? && coin_mech.has_change?
+      coin_mech.add_change_money(coin)
       return nil
     end
 
     if coin.one_hundred?
       # 100円玉を釣り銭に使える
-      one_hundred_yen_of_stock.add(coin)
+      coin_mech.add_coin_into_cash_box(coin)
+      return nil
     elsif coin.five_hundred?
       # 400円のお釣り
-      change_money.add(one_hundred_yen_of_stock.take_out_change_money);
+      coin_mech.add_change_money(coin_mech.take_out_change_money)
     end
 
-    if drink_type.diet_coke?
-      stock_of_coke.decrement(:quantity, 1)
-    elsif drink_type.diet_coke?
-      stock_of_diet_coke.decrement(:quantity, 1)
-    elsif drink_type.tea?
-      stock_of_tea.decrement(:quantity, 1)
-    end
-
-    self.save
-    Drink.create(drink_type_id: drink_type)
-
+    drink_storage.decrement(drink_type)
+    Drink.create(drink_type: drink_type)
   end
 
   def refund
-    result = change_money.get_amount
-    change_money.clear
-    result
-  end
-
-# private
-
-  def stock_of_coke
-    Stock.create(
-        vending_machine_id: self.id,
-        quantity: 5
-    )
-  end
-
-  def stock_of_diet_coke
-    Stock.create(
-      vending_machine_id: self.id,
-      quantity: 5
-    )
-  end
-
-  def stock_of_tea
-    Stock.create(
-      vending_machine_id: self.id,
-      quantity: 5
-    )
+    coin_mech.refund
   end
 
 end

@@ -1,7 +1,7 @@
 class CreateChangeMoneys < ActiveRecord::Migration[5.1]
   def change
     create_table :change_moneys do |t|
-      t.integer :vending_machine_id
+      t.integer :coin_mech_id, null: false
 
       t.timestamps
     end

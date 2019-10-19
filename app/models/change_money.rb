@@ -1,4 +1,5 @@
 class ChangeMoney < ApplicationRecord
+  belongs_to :coin_mech
   has_many :coins
 
   def get_amount
