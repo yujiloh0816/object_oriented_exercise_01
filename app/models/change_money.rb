@@ -1,5 +1,5 @@
 class ChangeMoney < ApplicationRecord
-  belongs_to :coin_mech
+  belongs_to :payment
   has_many :coins
 
   def get_amount

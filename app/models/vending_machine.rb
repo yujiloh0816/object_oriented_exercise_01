@@ -5,6 +5,7 @@ class VendingMachine < ApplicationRecord
   def buy(payment, kind_of_type)
     coin = Coin.create(kind: payment)
     drink_type = DrinkType.create(kind: kind_of_type)
+    payment = coin_mech.put(payment)
 
     # 100円と500円だけ受け付ける
     unless coin.one_hundred? || coin.five_hundred?
@@ -24,17 +25,10 @@ class VendingMachine < ApplicationRecord
       return nil
     end
 
-    if coin.one_hundred?
-      # 100円玉を釣り銭に使える
-      coin_mech.add_coin_into_cash_box(coin)
-      return nil
-    elsif coin.five_hundred?
-      # 400円のお釣り
-      coin_mech.add_change_money(coin_mech.take_out_change_money)
-    end
+    coin_mech.commit
 
-    drink_storage.decrement(drink_type)
-    Drink.create(drink_type: drink_type)
+    drink_storage.take_out(drink_type)
+
   end
 
   def refund

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191016151317) do
+ActiveRecord::Schema.define(version: 20191019052506) do
 
   create_table "cash_boxes", force: :cascade do |t|
     t.integer "coin_mech_id", null: false
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20191016151317) do
   end
 
   create_table "change_moneys", force: :cascade do |t|
-    t.integer "coin_mech_id", null: false
+    t.integer "payment_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -66,6 +66,12 @@ ActiveRecord::Schema.define(version: 20191016151317) do
   create_table "money", force: :cascade do |t|
     t.integer "coin_id", null: false
     t.integer "amount", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.integer "coin_mech_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

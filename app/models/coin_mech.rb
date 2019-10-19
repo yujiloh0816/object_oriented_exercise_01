@@ -1,7 +1,15 @@
 class CoinMech < ApplicationRecord
   belongs_to :vending_machine
-  has_one :change_money
+  has_one :payment
   has_one :cash_box
+
+  def put(payment)
+    Payment.new(payment)
+  end
+
+  def commit
+    payment.commit
+  end
 
   def add_change_money(coins)
     change_money.add(coins)
