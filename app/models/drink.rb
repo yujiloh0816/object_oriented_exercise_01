@@ -1,6 +1,5 @@
 class Drink < ApplicationRecord
-  COKE = "coke"
-  DIET_COKE = "diet_coke"
-  TEA = "tea"
+  belongs_to :drink_type
+  belongs_to :drink_stock, optional: true
 
 end

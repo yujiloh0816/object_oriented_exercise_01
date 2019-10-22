@@ -41,7 +41,6 @@ ActiveRecord::Schema.define(version: 20191019052506) do
   create_table "drink_stocks", force: :cascade do |t|
     t.integer "drink_storage_id", null: false
     t.integer "drink_type_id", null: false
-    t.integer "quantity", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -59,6 +58,8 @@ ActiveRecord::Schema.define(version: 20191019052506) do
   end
 
   create_table "drinks", force: :cascade do |t|
+    t.integer "drink_type_id"
+    t.integer "drink_stock_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
