@@ -1,7 +1,8 @@
 class CreateDrinks < ActiveRecord::Migration[5.1]
   def change
     create_table :drinks do |t|
-      t.string :kind
+      t.integer :drink_type_id
+      t.integer :drink_stock_id
 
       t.timestamps
     end

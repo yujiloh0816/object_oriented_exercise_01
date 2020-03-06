@@ -10,20 +10,74 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191013051728) do
+ActiveRecord::Schema.define(version: 20191019052506) do
+
+  create_table "cash_boxes", force: :cascade do |t|
+    t.integer "coin_mech_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "change_moneys", force: :cascade do |t|
+    t.integer "payment_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "coin_meches", force: :cascade do |t|
+    t.integer "vending_machine_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "coins", force: :cascade do |t|
+    t.integer "change_money_id"
+    t.integer "cash_box_id"
+    t.integer "kind", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "drink_stocks", force: :cascade do |t|
+    t.integer "drink_storage_id", null: false
+    t.integer "drink_type_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "drink_storages", force: :cascade do |t|
+    t.integer "vending_machine_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "drink_types", force: :cascade do |t|
+    t.integer "kind", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "drinks", force: :cascade do |t|
-    t.string "kind"
+    t.integer "drink_type_id"
+    t.integer "drink_stock_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "money", force: :cascade do |t|
+    t.integer "coin_id", null: false
+    t.integer "amount", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.integer "coin_mech_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "vending_machines", force: :cascade do |t|
-    t.integer "quantity_of_coke", default: 0
-    t.integer "quantity_of_diet_coke", default: 0
-    t.integer "quantity_of_tea", default: 0
-    t.integer "number_of_100_yen", default: 0
-    t.integer "charge", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
